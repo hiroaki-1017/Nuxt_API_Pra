@@ -1,73 +1,87 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
-      <h1 class="title">
-        apiPractice
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+      <h1 class="wetherTitle">気になる市の天気を調べてみよう</h1>
+      <div class="searchWether">
+        <div class="view" v-for="elem in items" :key="elem.label">
+          <nuxt-link
+            class="linkStyle"
+            v-bind:to="{ name: 'city-name', params: { name: elem.label } }"
+          >
+            {{ elem.label }}の天気を見る</nuxt-link
+          >
+        </div>
+        <!-- </div> -->
+        <input
+          class="wetherAdd"
+          type="text"
+          v-model="tmp"
+          placeholder="yokohama"
+        />
+        <button class="wetherAddBt" @click="wetherAdd">検索</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapState } from "vuex";
+
+export default {
+  props: ["error"],
+  data() {
+    return {
+      tmp: null,
+    };
+  },
+  computed: {
+    ...mapState({
+      items: (state) => state.items,
+    }),
+  },
+  methods: {
+    wetherAdd() {
+      this.$store.commit("wetherAdd", this.tmp);
+      this.tmp = null;
+    },
+  },
+};
 </script>
 
 <style>
 .container {
   margin: 0 auto;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
 }
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.wetherTitle {
+  font-size: 3vw;
+  margin-top: 4vw;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
+.searchWether {
+  margin-top: 12vw;
 }
 
-.links {
-  padding-top: 15px;
+.view {
+  margin: 3vw auto;
+}
+
+.linkStyle {
+  text-decoration: none;
+  color: #51b0d1;
+  font-size: 2vw;
+}
+
+.wetherAdd {
+  width: 20%;
+  padding: 0.4vw;
+}
+
+.wetherAddBt {
+  border: solid 2px rgba(156, 156, 156, 0);
+  background-color: #51b0d1;
+  color: #fff;
 }
 </style>
